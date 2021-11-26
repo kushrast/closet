@@ -41,7 +41,22 @@ class ApiHubStorageClient extends StorageClient {
 	getOutfit = (outfitId) => {
 		// Make a request for a user with a given ID
 		return new Promise((resolve, reject) => {
-			axios.get('http://127.0.0.1:5000/closet/outfit?ID='+outfitId)
+			axios.get('http://127.0.0.1:5000/closet/outfit?id='+outfitId)
+			  .then(function (response) {
+			    // handle success
+			    resolve(response.data);
+			  })
+			  .catch(function (error) {
+			    // handle error
+			    reject(error);
+			  });
+		});
+	}
+
+	getClothesOfType = (clothingType) => {
+		// Make a request for a user with a given ID
+		return new Promise((resolve, reject) => {
+			axios.get('http://127.0.0.1:5000/closet/clothes/type?name='+clothingType)
 			  .then(function (response) {
 			    // handle success
 			    resolve(response.data);
@@ -58,3 +73,4 @@ var localStorageClient = new LocalStorageClient();
 var apiHubStorageClient = new ApiHubStorageClient();
 
 export const getOutfit = apiHubStorageClient.getOutfit;
+export const getClothesOfType = apiHubStorageClient.getClothesOfType;

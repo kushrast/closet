@@ -5,3 +5,14 @@
   padding-left: 20px;
   padding-right: 20px;
 }
+
+.name-input {
+  padding: 0px 0px 0px 0px;
+  box-shadow: none !important;
+  border: 0 !important;
+  border-radius: 0px !important;
+  border-bottom: 1px solid lightgrey !important;
+  outline: 0 !important;
+  font-size: 20px !important;
+  font-weight: 500;
+} 
