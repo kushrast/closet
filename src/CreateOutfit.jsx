@@ -3,7 +3,7 @@ import 'bulma/css/bulma.min.css';
 import './App.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWind, faCloud, faCloudSun, faSun, faTemperatureHigh, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faWind, faCloud, faCloudSun, faSun, faTemperatureHigh, faPen, faMinus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { withRouter } from "react-router";
 import * as stringSimilarity from "string-similarity";
 import React from 'react';
@@ -17,6 +17,7 @@ class AddListItem extends React.Component {
     this.state = {
       showInput: false,
       showDropdown: false,
+      shouldFetchAutofill: true,
       value: "",
 
       existingCategoryValues: [],
@@ -39,7 +40,7 @@ class AddListItem extends React.Component {
    */
   handleClickOutside(event) {
     if (this.box && !this.box.current.contains(event.target)) {
-      this.setState({showInput: false, showDropdown: false});
+      this.setState({showInput: false, showDropdown: false, shouldFetchAutofill: true});
     }
   }
 
@@ -49,7 +50,7 @@ class AddListItem extends React.Component {
 
   onSubmit = () => {
     this.props.addNew(this.state.value);
-    this.setState({value: "", showInput: false, showDropdown: false});
+    this.setState({value: "", showInput: false, showDropdown: false, shouldFetchAutofill: true});
   }
 
   showInput = () => {
@@ -57,26 +58,38 @@ class AddListItem extends React.Component {
   }
 
   onKeyDown = (event) => {
-    //TODO: FIX LOGIC, ONLY FOR TESTING, NOT ROBUST
-    console.log(this.state.existingCategoryValues.length);
-    if (this.state.existingCategoryValues.length == 0) {
+    var parent = this;
+    function compareToAutofillGuesses() {
+      var matches = []
+      if (parent.state.existingCategoryValues.length > 0) {
+        var similarityRatings = stringSimilarity.findBestMatch(parent.state.value, parent.state.existingCategoryValues);
+        for (var i = 0; i < similarityRatings.ratings.length; i++) {
+          var stringRating = similarityRatings.ratings[i];
+          if (stringRating.rating > 0.1) {
+            matches.push(stringRating.target);
+          }
+        }
+      }
+      if (matches.length > 0) {
+        parent.setState({autofillGuesses: matches, showDropdown: true});
+      } else {
+        parent.setState({autofillGuesses: [], showDropdown: false});
+      }
+    }
+
+    if (this.state.shouldFetchAutofill) {
       this.props.fetchAutofill()
       .then(
         (data) => {
-          this.setState({existingCategoryValues: data});
+          this.setState({existingCategoryValues: data, shouldFetchAutofill: false});
+          compareToAutofillGuesses();
         }
         ,(error)=>console.log(error));
     } else {
-      console.log(this.state.existingCategoryValues);
-      var matches = stringSimilarity.findBestMatch(this.state.value, this.state.existingCategoryValues);
-      if (matches.bestMatch.rating > 0.15) {
-        this.setState({autofillGuesses: this.state.existingCategoryValues, showDropdown: true});
-      } else {
-        this.setState({autofillGuesses: [], showDropdown: false});
-      }
-
       if (event.key==="Enter") {
         this.onSubmit();
+      } else {
+        compareToAutofillGuesses();
       }
     }
   }
@@ -253,6 +266,53 @@ class WeatherPicker extends React.Component {
   }
 }
 
+class RemoveItem extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      numClicks: 0
+    }
+
+    this.box = React.createRef();
+  }
+
+  componentDidMount() {
+    document.addEventListener('click', this.handleClickOutside.bind(this), true);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleClickOutside.bind(this), true);
+    this.box = null;
+  };
+
+  /**
+   * Alert if clicked on outside of element
+   */
+  handleClickOutside(event) {
+    if (this.box && !this.box.current.contains(event.target)) {
+      this.setState({numClicks: 0});
+    }
+  }
+
+  toggleClick = () => {
+    if (this.state.numClicks == 0) {
+      this.setState({numClicks: 1});
+    } else {
+      this.setState({numClicks: 2});
+      this.props.deleteItem();
+    }
+  }
+
+  render() {
+    return (
+      <span ref={this.box} style={{"paddingLeft": "10px"}}>
+        <FontAwesomeIcon icon={this.state.numClicks == 0 ? faMinus : faTimes} color={this.state.numClicks == 0 ? "black" : "red"} onClick={this.toggleClick} size="xs"/>
+      </span>
+      );
+  }
+}
+
 class CreateOutfit extends React.Component {
   constructor(props) {
     super(props);
@@ -277,24 +337,60 @@ class CreateOutfit extends React.Component {
     this.setState({outfit: {...this.state.outfit, jackets: [...this.state.outfit.jackets, jacket]}})
   }
 
+  deleteJacket = (index) => {
+    var jackets = this.state.outfit.jackets;
+    jackets.splice(index, 1);
+    this.setState({outfit: {...this.state.outfit, jackets: jackets}});
+  }
+
   addNewShirt = (shirt) => {
     this.setState({outfit: {...this.state.outfit, shirts: [...this.state.outfit.shirts, shirt]}})
+  }
+
+  deleteShirt = (index) => {
+    var shirts = this.state.outfit.shirts;
+    shirts.splice(index, 1);
+    this.setState({outfit: {...this.state.outfit, shirts: shirts}});
   }
 
   addNewBottom = (bottom) => {
     this.setState({outfit: {...this.state.outfit, bottoms: [...this.state.outfit.bottoms, bottom]}})
   }
 
+  deleteBottom = (index) => {
+    var bottoms = this.state.outfit.bottoms;
+    bottoms.splice(index, 1);
+    this.setState({outfit: {...this.state.outfit, bottoms: bottoms}});
+  }
+
   addNewShoe = (shoe) => {
     this.setState({outfit: {...this.state.outfit, shoes: [...this.state.outfit.shoes, shoe]}})
+  }
+
+  deleteShoe = (index) => {
+    var shoes = this.state.outfit.shoes;
+    shoes.splice(index, 1);
+    this.setState({outfit: {...this.state.outfit, shoes: shoes}});
   }
 
   addStyleTag = (style) => {
     this.setState({outfit: {...this.state.outfit, styles: [...this.state.outfit.styles, style]}})
   }
 
+  deleteStyleTag = (index) => {
+    var styles = this.state.outfit.styles;
+    styles.splice(index, 1);
+    this.setState({outfit: {...this.state.outfit, styles: styles}});
+  }
+
   addOtherTag = (tag) => {
     this.setState({outfit: {...this.state.outfit, other_tags: [...this.state.outfit.other_tags, tag]}})
+  }
+
+  deleteOtherTag = (index) => {
+    var other_tags = this.state.outfit.other_tags;
+    other_tags.splice(index, 1);
+    this.setState({outfit: {...this.state.outfit, other_tags: other_tags}});
   }
 
   updateWeather = (weather) => {
@@ -361,10 +457,11 @@ class CreateOutfit extends React.Component {
               <div style={{paddingTop: "25px"}}>
                 <div>
                   <span class="title is-5"> Jackets </span>
-                  {this.state.outfit.jackets.map((jacket) => 
-                    <div>
+                  {this.state.outfit.jackets.map((jacket, index) => 
+                    <div style={{"display":"flex"}}>
                       <span class="subtitle is-6">
                         {jacket}
+                      <RemoveItem deleteItem={()=>{this.deleteJacket(index)}}/>
                       </span>
                     </div>
                   )}
@@ -374,10 +471,11 @@ class CreateOutfit extends React.Component {
               <div style={{paddingTop: "25px"}}>
                 <div>
                   <span class="title is-5"> Shirts </span>
-                  {this.state.outfit.shirts.map((shirt) => 
-                    <div>
+                  {this.state.outfit.shirts.map((shirt, index) => 
+                    <div style={{"display":"flex"}}>
                       <span class="subtitle is-6">
                         {shirt}
+                      <RemoveItem deleteItem={()=>{this.deleteShirt(index)}}/>
                       </span>
                     </div>
                   )}
@@ -387,10 +485,11 @@ class CreateOutfit extends React.Component {
               <div style={{paddingTop: "25px"}}>
                 <div>
                   <span class="title is-5"> Bottoms </span>
-                  {this.state.outfit.bottoms.map((bottom) => 
-                    <div>
+                  {this.state.outfit.bottoms.map((bottom, index) => 
+                    <div style={{"display":"flex"}}>
                       <span class="subtitle is-6">
                         {bottom}
+                      <RemoveItem deleteItem={()=>{this.deleteBottom(index)}}/>
                       </span>
                     </div>
                   )}
@@ -400,10 +499,11 @@ class CreateOutfit extends React.Component {
               <div style={{paddingTop: "25px"}}>
                 <div>
                   <span class="title is-5"> Shoes </span>
-                  {this.state.outfit.shoes.map((shoe) => 
-                    <div>
+                  {this.state.outfit.shoes.map((shoe, index) => 
+                    <div style={{"display":"flex"}}>
                       <span class="subtitle is-6">
                         {shoe}
+                      <RemoveItem deleteItem={()=>{this.deleteShoe(index)}}/>
                       </span>
                     </div>
                   )}
@@ -418,7 +518,14 @@ class CreateOutfit extends React.Component {
                   <span class="title is-6"> Style Tags </span>
                 </div>
                 <div>
-                  {this.state.outfit.styles.map((style) => <span class="tag">{style}</span>)}
+                  {this.state.outfit.styles.map((style, index) => 
+                    <div style={{"display":"flex"}}>
+                      <span class="tag">
+                        {style}
+                      <RemoveItem deleteItem={()=>{this.deleteStyleTag(index)}}/>
+                      </span>
+                    </div>
+                  )}
                   <AddListItem numItems={this.state.outfit.styles.length} multipleString="Add Style Tag" singleString="Add Style Tag" addNew={this.addStyleTag} fetchAutofill={()=>{return getClothesOfType("shoe")}}/>
                 </div>
               </div>
@@ -427,7 +534,14 @@ class CreateOutfit extends React.Component {
                   <span class="title is-6"> Other Tags </span>
                 </div>
                 <div>
-                  {this.state.outfit.other_tags.map((tag) => <span class="tag">{tag}</span>)}
+                  {this.state.outfit.other_tags.map((tag, index) => 
+                    <div style={{"display":"flex"}}>
+                      <span class="tag">
+                        {tag}
+                      <RemoveItem deleteItem={()=>{this.deleteOtherTag(index)}}/>
+                      </span>
+                    </div>
+                    )}
                   <AddListItem numItems={this.state.outfit.other_tags.length} multipleString="Add Other Tag" singleString="Add Other Tag" addNew={this.addOtherTag} fetchAutofill={()=>{return getClothesOfType("shoe")}}/>
                 </div>
               </div>
