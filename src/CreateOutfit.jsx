@@ -5,10 +5,11 @@ import './App.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWind, faCloud, faCloudSun, faSun, faTemperatureHigh, faPen, faMinus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { withRouter } from "react-router";
+import { Navigate } from "react-router-dom";
 import * as stringSimilarity from "string-similarity";
 import React from 'react';
 
-import {getClothesOfType} from "./api/Storage.js";
+import {getClothesOfType, validatePotentialOutfit, createNewOutfit} from "./api/Storage.js";
 
 class AddListItem extends React.Component {
   constructor(props) {
@@ -319,18 +320,25 @@ class CreateOutfit extends React.Component {
 
     this.state = {
       loading: false,
+      showSubmitModal: true,
+      newClothes: {"jacket":["Green Shirt Jacket"]},
+      outfit_id: "",
       outfit: {
-        name: "",
-        notes: "",
-        jackets: ["Green Shirt Jacket"],
-        shirts: [],
-        bottoms: [],
-        shoes: [],
-        styles: [],
-        other_tags: [],
-        weather_rating: ""
+        name: "Name",
+        notes: "A bunch of notes about this outfit",
+        jackets: ["Green Shirt Jacket", "Nike Hoodie" ],
+        shirts: ["Shirt"],
+        bottoms: ["bottom"],
+        shoes: ["shoe"],
+        styles: ["casual"],
+        other_tags: ["a tag"],
+        weather_rating: "55-63"
       }
     }
+  }
+
+  updateOutfitName = (inputElem) => {
+    this.setState({outfit: {...this.state.outfit, name: inputElem.target.value}});
   }
 
   addNewJacket = (jacket) => {
@@ -422,11 +430,103 @@ class CreateOutfit extends React.Component {
     return submissionErrors;
   }
 
-  submitOutfit = () => {
+  verifyOutfit = () => {
     var submissionErrors = this.validateFieldsForSubmission();
 
     if (submissionErrors.length > 0) {
       alert(submissionErrors[0]);
+      return;
+    }
+
+    validatePotentialOutfit(this.state.outfit)
+    .then(
+      (response) => {
+        if (response.newClothes.length > 0) {
+          this.setState({newClothes: response.newClothes, showSubmitModal: true});
+        } else {
+          this.submitOutfit();
+        }
+      },
+      (error) => {
+        alert(error.message);
+        this.setState({showSubmitModal: false});
+    });
+
+    validatePotentialOutfit(this.state.outfit)
+    .then(
+      (newClothes) => {
+        if (newClothes.length > 0) {
+          this.setState({newClothes: newClothes, showSubmitModal: true});
+        } else {
+          this.submitOutfit();
+        }
+      },
+      (error) => {
+        console.log(error);
+    });
+  }
+
+  submitOutfit = () => {
+    validatePotentialOutfit(this.state.outfit)
+    .then(
+      (response) => {
+        createNewOutfit(this.state.outfit)
+          .then(
+            (data) => {
+              this.setState({outfit_id: data.outfit_id});
+            },
+            (error)=>console.log(error));
+      },
+      (error) => {
+        alert(error.message);
+        this.setState({showSubmitModal: false});
+    });
+  }
+
+  getSubmitModalBody = () => {
+    var parent = this;
+    function getListItems() {
+      function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+      }
+      var items = [];
+      Object.keys(parent.state.newClothes).forEach(
+        (key) => 
+          parent.state.newClothes[key].forEach((clothing) => {
+            items.push(<li style={{"color": "green"}}>+ [{capitalizeFirstLetter(key)}] {clothing}</li>);
+          })
+      )
+
+      return items;
+    }
+
+    return (
+      <div>
+        <div class="title is-3"  style={{marginBottom: "20px"}}>
+          Confirm Changes
+        </div>
+        <div>
+          <div>
+            <div class="subtitle is-6">
+              <ul>
+                {getListItems()}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      );
+  }
+
+  closeModal = () => {
+    this.setState({showSubmitModal: false});
+  }
+
+  getModalActive = () => {
+    if (this.state.showSubmitModal) {
+      return "modal is-active";
+    } else {
+      return "modal";
     }
   }
 
@@ -439,6 +539,21 @@ class CreateOutfit extends React.Component {
         </nav>
         :
         <div>
+          {this.state.outfit_id != "" ? <Navigate to={"/outfit/"+this.state.outfit_id} replace={true} /> : ""}
+          <div class={this.getModalActive()}>
+            <div class="modal-background"></div>
+            <div class="modal-content">
+              <div class="box">
+                <div>
+                  {this.getSubmitModalBody()}
+                </div>
+                <div class="submit-form" style={{"marginTop": "20px"}}>
+                  <button class="button is-light" style={{"marginRight": "10px"}} aria-label="close" onClick={this.closeModal}>Back</button>
+                  <button class="button is-success" aria-label="close" onClick={this.submitOutfit}>Confirm</button>
+                </div>
+              </div>
+            </div>
+          </div>
           <div>
             <nav class="breadcrumb" aria-label="breadcrumbs">
               <ul>
@@ -451,7 +566,7 @@ class CreateOutfit extends React.Component {
             <div class="column is-4">
               <div style={{paddingTop: "15px"}}>
                 <div>
-                <input class="input name-input" ref="input" placeholder="Outfit Name"/>
+                <input class="input name-input" ref="input" placeholder="Outfit Name" onChange={this.updateOutfitName}/>
                 </div>
               </div>
               <div style={{paddingTop: "25px"}}>
@@ -551,7 +666,7 @@ class CreateOutfit extends React.Component {
                   <textarea class="textarea" placeholder="Extra Notes" rows="4"></textarea>
                 </div>
               </div>
-              <div style={{paddingTop: "20px"}} onClick={this.submitOutfit}>
+              <div style={{paddingTop: "20px"}} onClick={this.verifyOutfit}>
                 <button class="button is-info is-small">Add Outfit</button>
               </div>
             </div>

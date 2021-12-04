@@ -60,7 +60,8 @@ function App() {
       <div className="container">
         <Header/>
         <Routes>
-          <Route path="/outfit/id"  element={<GetOutfit />}/>
+          <Route path="/outfit/" element={<GetOutfit/>}/>
+          <Route path="/outfit/:id" element={<GetOutfit/>}/>
           <Route path="/outfit/create"  element={<CreateOutfit />}/>
         </Routes>
       </div>

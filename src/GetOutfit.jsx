@@ -4,7 +4,7 @@ import './App.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloud } from '@fortawesome/free-solid-svg-icons';
-import { withRouter } from "react-router";
+import { useParams } from "react-router";
 import React from 'react';
 
 import {getOutfit} from "./api/Storage.js";
@@ -13,9 +13,15 @@ class GetOutfit extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {loading: true}
+    this.state = {
+      loading: true
+    }
+    var id = this.props.params.id;
+    if (id == null) {
+      id = "619f517d7105e3db8b626617";
+    }
 
-    getOutfit("blank")
+    getOutfit(id)
     .then(
       (data) => {
         this.setState({...data, loading: false});
@@ -125,4 +131,17 @@ class GetOutfit extends React.Component {
   )}
 }
 
-export default GetOutfit;
+const withRouter = WrappedComponent => props => {
+  const params = useParams();
+  // etc... other react-router-dom v6 hooks
+
+  return (
+    <WrappedComponent
+      {...props}
+      params={params}
+      // etc...
+    />
+  );
+};
+
+export default withRouter(GetOutfit);

@@ -53,6 +53,39 @@ class ApiHubStorageClient extends StorageClient {
 		});
 	}
 
+	createNewOutfit = (outfit) => {
+		var json_outfit = JSON.stringify(outfit);
+		console.log(json_outfit);
+
+		return new Promise((resolve, reject) => {
+			axios.post('http://127.0.0.1:5000/closet/outfit/new?outfit='+json_outfit)
+			  .then(function (response) {
+			    // handle success
+			    resolve(response.data);
+			  })
+			  .catch(function (error) {
+			    // handle error
+			    reject(error);
+			  });
+		});
+	}
+
+	validatePotentialOutfit = (outfit) => {
+		var json_outfit = JSON.stringify(outfit);
+
+		return new Promise((resolve, reject) => {
+			axios.get('http://127.0.0.1:5000/closet/outfit/validate?outfit='+json_outfit)
+			  .then(function (response) {
+			    // handle success
+			    resolve(response.data);
+			  })
+			  .catch(function (error) {
+			    // handle error
+			    reject(error.response.data);
+			  });
+		});
+	}
+
 	getClothesOfType = (clothingType) => {
 		// Make a request for a user with a given ID
 		return new Promise((resolve, reject) => {
@@ -73,4 +106,6 @@ var localStorageClient = new LocalStorageClient();
 var apiHubStorageClient = new ApiHubStorageClient();
 
 export const getOutfit = apiHubStorageClient.getOutfit;
+export const createNewOutfit = apiHubStorageClient.createNewOutfit;
+export const validatePotentialOutfit = apiHubStorageClient.validatePotentialOutfit;
 export const getClothesOfType = apiHubStorageClient.getClothesOfType;
