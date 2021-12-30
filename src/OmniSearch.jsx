@@ -63,6 +63,8 @@ class AddListItem extends React.Component {
   constructor(props) {
     super(props);
 
+    console.log(this.props.style);
+
     this.state = {
       showInput: false,
       showDropdown: false,
@@ -159,7 +161,7 @@ class AddListItem extends React.Component {
             <div class="dropdown-trigger">
                 <div class="field">
                     <p class="control is-expanded">
-                        <input class="input is-small" type="search" placeholder="Search or Add New" value={this.state.value} onChange={this.updateInputValue} onKeyDown={this.onKeyDown}/>
+                        <input class="input" type="search" placeholder="Search or Add New" value={this.state.value} onChange={this.updateInputValue} onKeyDown={this.onKeyDown}/>
                     </p>
                 </div>
             </div>
@@ -463,7 +465,7 @@ class OmniSearch extends React.Component {
         clothingTypes: {},
         styles: {},
         weatherRatings: {},
-        tags: {}
+        tags: []
       }
     }
 
@@ -521,6 +523,11 @@ class OmniSearch extends React.Component {
     this.setState({searchParams: {...this.state.searchParams, weatherRatings: weatherRatings}})
   }
 
+  addTag = (tag) => {
+    console.log(tag);
+    this.setState({searchParams: {...this.state.searchParams, tags: [...this.state.searchParams.tags, tag]}})
+  }
+
   deleteWeatherRating = (weatherRating) => {
     var weatherRatings = this.state.searchParams.weatherRatings;
     delete weatherRatings[weatherRating];
@@ -538,7 +545,7 @@ class OmniSearch extends React.Component {
           </ul>
         </nav>
       </div>
-      <div class="columns is-multiline"  style={{"paddingTop": "15px"}}>
+      <div class="columns is-multiline is-vcentered"  style={{"paddingTop": "15px"}}>
         <div class="column is-12">
           <ItemTypeDropdown selectedType={this.state.searchParams.type} updateInputValue={this.toggleType}/>
           { this.state.searchParams.type === "Clothes" ? 
@@ -549,7 +556,7 @@ class OmniSearch extends React.Component {
           <WeatherDropdown updateInputValue={this.selectWeatherRanges} selectedWeatherRanges={this.state.searchParams.weatherRatings}/>
         </div>
         <div class="column is-5">
-          <input class="input" type="search" placeholder="Name"/>
+          <input class="input" type="search" placeholder="Search by Name, Tag, or Piece of Clothing"/>
         </div>
         <div class="column is-12">
           { this.state.searchParams.type != "" ? 
@@ -582,6 +589,14 @@ class OmniSearch extends React.Component {
               <span class="tag">
                 Weather Range: {weatherRating}
               <RemoveItem deleteItem={()=>{this.deleteWeatherRating(weatherRating)}}/>
+              </span>
+            </div>
+          )}
+          {this.state.searchParams.tags.map((tag, index) => 
+            <div style={{"paddingBottom": "4px"}}>
+              <span class="tag">
+                Tag: {tag}
+              <RemoveItem deleteItem={()=>{}}/>
               </span>
             </div>
           )}
