@@ -16,38 +16,17 @@ import {
 } from "react-router-dom";
 import React from 'react';
 
+import Home from './Home.jsx';
 import GetOutfit from './GetOutfit.jsx';
 import CreateOutfit from './CreateOutfit.jsx';
+import EditOutfit from './EditOutfit.jsx';
+import OmniSearch from './OmniSearch.jsx';
 
 function Header() {
   return (
     <div class="header column">
       <div class="columns is-12">
-        <h1 class="title is-1">Closet.</h1>
-      </div>
-    </div>
-    );
-}
-
-function MainPage() {
-  return (
-    <div>
-      <div class="columns is-centered">
-        <div  style={{paddingTop: "40px"}} class="column is-6">
-          <figure class="image is-128x128 is-centered">
-            <img src="https://bulma.io/images/placeholders/256x256.png"/>
-          </figure>
-        </div>
-      </div>
-      <div class="columns">
-        <div class="column is-12  is-centered">
-          <button class="button is-light is-fullwidth">Add outfit</button>
-        </div>
-      </div>
-      <div class="columns">
-        <div class="column is-12  is-centered">
-          <button class="button is-info is-fullwidth">Browse</button>
-        </div>
+        <h1 class="title is-1"><a href="/" style={{"color": "inherit"}}>Closet.</a></h1>
       </div>
     </div>
     );
@@ -60,9 +39,12 @@ function App() {
       <div className="container">
         <Header/>
         <Routes>
+          <Route path="/" element={<Home/>}/>
           <Route path="/outfit/" element={<GetOutfit/>}/>
+          <Route path="/outfit/:id/edit" element={<EditOutfit/>}/>
           <Route path="/outfit/:id" element={<GetOutfit/>}/>
           <Route path="/outfit/create"  element={<CreateOutfit />}/>
+          <Route path="/search"  element={<OmniSearch/>}/>
         </Routes>
       </div>
     </div>

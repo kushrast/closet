@@ -4,12 +4,12 @@ import './App.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWind, faCloud, faCloudSun, faSun, faTemperatureHigh, faPen, faMinus, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { withRouter } from "react-router";
 import { Navigate } from "react-router-dom";
+import { useParams } from "react-router";
 import * as stringSimilarity from "string-similarity";
 import React from 'react';
 
-import {getClothesOfType, validatePotentialOutfit, createNewOutfit, getStyles} from "./api/Storage.js";
+import {getOutfit, getClothesOfType, validatePotentialOutfit, updateOutfit, getStyles} from "./api/Storage.js";
 
 class AddListItem extends React.Component {
   constructor(props) {
@@ -314,45 +314,32 @@ class RemoveItem extends React.Component {
   }
 }
 
-class CreateOutfit extends React.Component {
+class EditOutfit extends React.Component {
   constructor(props) {
     super(props);
 
-    var exampleState = {
-      loading: false,
-      showSubmitModal: true,
-      newClothes: {"jacket":["Green Shirt Jacket"]},
-      outfit_id: "",
-      outfit: {
-        name: "Name",
-        notes: "A bunch of notes about this outfit",
-        jackets: ["Green Shirt Jacket", "Nike Hoodie" ],
-        shirts: ["Shirt"],
-        bottoms: ["bottom"],
-        shoes: ["shoe"],
-        styles: ["casual"],
-        other_tags: ["a tag"],
-        weather_rating: "55-63"
-      }
+    var id = this.props.params.id;
+    if (id == null) {
+      id = "619f517d7105e3db8b626617";
     }
 
+
     this.state = {
-      loading: false,
+      loading: true,
       showSubmitModal: false,
-      outfit_id: "",
-      newClothes: {},
-      outfit: {
-        name: "",
-        notes: "",
-        jackets: [],
-        shirts: [],
-        bottoms: [],
-        shoes: [],
-        styles: [],
-        other_tags: [],
-        weather_rating: ""
-      }
+      sendToOutfitPage: false,
+
+      outfit: {},
+      newClothes: {}
     }
+
+    getOutfit(id)
+    .then(
+      (data) => {
+        console.log(data);
+        this.setState({outfit: data, loading: false});
+      }
+      ,(error)=>console.log(error));
   }
 
   updateOutfitName = (inputElem) => {
@@ -488,10 +475,10 @@ class CreateOutfit extends React.Component {
     validatePotentialOutfit(this.state.outfit)
     .then(
       (response) => {
-        createNewOutfit(this.state.outfit)
+        updateOutfit(this.state.outfit)
           .then(
             (data) => {
-              this.setState({outfit_id: data.outfit_id});
+              this.setState({sendToOutfitPage: true});
             },
             (error)=>console.log(error));
       },
@@ -557,7 +544,7 @@ class CreateOutfit extends React.Component {
         </nav>
         :
         <div>
-          {this.state.outfit_id != "" ? <Navigate to={"/outfit/"+this.state.outfit_id} replace={true} /> : ""}
+          {this.state.sendToOutfitPage ? <Navigate to={"/outfit/"+this.state.outfit.id} replace={true} /> : ""}
           <div class={this.getModalActive()}>
             <div class="modal-background"></div>
             <div class="modal-content">
@@ -576,7 +563,8 @@ class CreateOutfit extends React.Component {
             <nav class="breadcrumb" aria-label="breadcrumbs">
               <ul>
                 <li><a href="#">Outfits</a></li>
-                <li class="is-active"><a aria-current="page">Add New Outfit</a></li>
+                <li><a href={"/outfit/"+this.state.outfit.id} aria-current="page">{this.state.outfit.name}</a></li>
+                <li class="is-active"><a aria-current="page">Edit Outfit</a></li>
               </ul>
             </nav>
           </div>
@@ -584,7 +572,7 @@ class CreateOutfit extends React.Component {
             <div class="column is-4">
               <div style={{paddingTop: "15px"}}>
                 <div>
-                <input class="input name-input" ref="input" placeholder="Outfit Name" onChange={this.updateOutfitName}/>
+                <input class="input name-input" ref="input" placeholder="Outfit Name" value={this.state.outfit.name} onChange={this.updateOutfitName}/>
                 </div>
               </div>
               <div style={{paddingTop: "25px"}}>
@@ -685,7 +673,7 @@ class CreateOutfit extends React.Component {
                 </div>
               </div>
               <div style={{paddingTop: "20px"}} onClick={this.verifyOutfit}>
-                <button class="button is-info is-small">Add Outfit</button>
+                <button class="button is-link is-small">Update Outfit</button>
               </div>
             </div>
           </div>
@@ -695,4 +683,17 @@ class CreateOutfit extends React.Component {
   )}
 }
 
-export default CreateOutfit;
+const withRouter = WrappedComponent => props => {
+  const params = useParams();
+  // etc... other react-router-dom v6 hooks
+
+  return (
+    <WrappedComponent
+      {...props}
+      params={params}
+      // etc...
+    />
+  );
+};
+
+export default withRouter(EditOutfit);

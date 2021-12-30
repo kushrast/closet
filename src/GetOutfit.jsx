@@ -125,6 +125,9 @@ class GetOutfit extends React.Component {
               {this.state.other_tags.map((tag) => <span class="tag">{tag}</span>)}
             </div>
           </div>
+          <div style={{paddingTop: "20px"}}>
+            <a href={"/outfit/"+this.state.id+"/edit"}><button class="button is-link is-small">Edit</button></a>
+          </div>
         </div>
       }
     </div>
