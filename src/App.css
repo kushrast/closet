@@ -16,3 +16,21 @@
   font-size: 20px !important;
   font-weight: 500;
 } 
+
+.dropdown.is-fullwidth {
+  display: flex;
+}
+
+.dropdown.is-fullwidth > .dropdown-trigger {
+  width:  100%;
+}
+
+.dropdown.is-fullwidth > .dropdown-menu {
+  width:  100%;
+}
+
+a.result, a.result:hover {
+    text-decoration:none;
+    font-weight:none;
+    color:  inherit;
+}
