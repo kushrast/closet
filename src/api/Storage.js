@@ -128,6 +128,45 @@ class ApiHubStorageClient extends StorageClient {
 			  });
 		});
 	}
+
+	getSearchPredictions = (searchString) => {
+		// Make a request for a user with a given ID
+		return new Promise((resolve, reject) => {
+			axios.get('http://127.0.0.1:5000/closet/search/predictions?query='+searchString)
+			  .then(function (response) {
+			    // handle success
+			    resolve(response.data);
+			  })
+			  .catch(function (error) {
+			    // handle error
+			    reject(error);
+			  });
+		});
+	}
+
+	search = (searchParams) => {
+		searchParams = JSON.parse(JSON.stringify(searchParams))
+		searchParams["type"] = searchParams["type"].toLowerCase();
+		searchParams["styles"] = Object.keys(searchParams["styles"]).map((value) => value.toLowerCase());
+		searchParams["weatherRatings"] = Object.keys(searchParams["weatherRatings"]);
+		searchParams["containsClothing"] = Object.keys(searchParams["containsClothing"]);
+		searchParams["clothingTypes"] = Object.keys(searchParams["clothingTypes"]).map((value) => value.toLowerCase());
+		searchParams["tags"] = Object.keys(searchParams["tags"]).map((value) => value.toLowerCase());
+
+		var params = encodeURIComponent(JSON.stringify(searchParams));
+
+		return new Promise((resolve, reject) => {
+			axios.get('http://127.0.0.1:5000/closet/search?params='+params)
+			  .then(function (response) {
+			    // handle success
+			    resolve(response.data);
+			  })
+			  .catch(function (error) {
+			    // handle error
+			    reject(error);
+			  });
+		});
+	}
 }
 
 var localStorageClient = new LocalStorageClient();
@@ -139,3 +178,5 @@ export const updateOutfit = apiHubStorageClient.updateOutfit;
 export const validatePotentialOutfit = apiHubStorageClient.validatePotentialOutfit;
 export const getClothesOfType = apiHubStorageClient.getClothesOfType;
 export const getStyles = localStorageClient.getStyles;
+export const getSearchPredictions = apiHubStorageClient.getSearchPredictions;
+export const search = apiHubStorageClient.search;

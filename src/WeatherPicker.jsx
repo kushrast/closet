@@ -28,6 +28,7 @@ class WeatherPicker extends React.Component {
 
   componentWillUnmount() {
     document.removeEventListener('click', this.handleClickOutside.bind(this), true);
+    this.box = null;
   };
 
   getClasses = () => {

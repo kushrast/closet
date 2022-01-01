@@ -24,9 +24,9 @@ import OmniSearch from './OmniSearch.jsx';
 
 function Header() {
   return (
-    <div class="header column">
-      <div class="columns is-12">
-        <h1 class="title is-1"><a href="/" style={{"color": "inherit"}}>Closet.</a></h1>
+    <div className="header column">
+      <div className="columns is-12">
+        <h1 className="title is-1"><a href="/" style={{"color": "inherit"}}>Closet.</a></h1>
       </div>
     </div>
     );

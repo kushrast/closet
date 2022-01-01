@@ -9,7 +9,7 @@ import { useParams } from "react-router";
 import React from 'react';
 
 import RemoveItem from './RemoveItem.jsx';
-import {getStyles} from "./api/Storage.js";
+import {getStyles, search, getSearchPredictions} from "./api/Storage.js";
 
 class MenuDropdownElement extends React.Component {
   constructor(props) {
@@ -46,14 +46,14 @@ class MenuDropdownElement extends React.Component {
 
   render() {
     return (
-      <div class="dropdown is-active" ref={this.box} style={{"paddingTop": "4px", "paddingRight": "4px"}}>
-        <div class="dropdown-trigger">
-          <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.toggleDropdown}>
+      <div className="dropdown is-active" ref={this.box} style={{"paddingTop": "4px", "paddingRight": "4px"}}>
+        <div className="dropdown-trigger">
+          <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={this.toggleDropdown}>
             {this.props.trigger}
           </button>
         </div>
         { this.state.showDropdown ? 
-        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+        <div className="dropdown-menu" id="dropdown-menu" role="menu">
           {this.props.dropdownContent}
         </div>
         : ""}
@@ -73,6 +73,7 @@ class ItemTypeDropdown extends React.Component {
     if (this.props.selectedType != type) {
       selectedVal = type;
     }
+
     this.props.updateInputValue(selectedVal);
   }
 
@@ -80,13 +81,13 @@ class ItemTypeDropdown extends React.Component {
     return (
       <div>
         <span>{ this.props.selectedType==="" ? "Type" : "Type: " + this.props.selectedType} </span>
-        <span class="icon is-small">
+        <span className="icon is-small">
           <FontAwesomeIcon icon={faAngleDown} size="xs"/>
         </span>
       </div>);
   }
 
-  getClasses = (type) => {
+  getclassNamees = (type) => {
     if (this.props.selectedType === type) {
       return "dropdown-item is-active";
     }
@@ -96,11 +97,11 @@ class ItemTypeDropdown extends React.Component {
   dropdownContent = () => {
     return (
       <div>
-        <div class="dropdown-content">
-          <a href="#" class={this.getClasses("Outfits")} onClick={()=>this.selectType("Outfits")}>
+        <div className="dropdown-content">
+          <a href="#" className={this.getclassNamees("Outfits")} onClick={()=>this.selectType("Outfits")}>
             Outfits
           </a>
-          <a class={this.getClasses("Clothes")} onClick={()=>this.selectType("Clothes")}>
+          <a className={this.getclassNamees("Clothes")} onClick={()=>this.selectType("Clothes")}>
             Clothes
           </a>
         </div>
@@ -133,13 +134,13 @@ class ClothingTypeDropdown extends React.Component {
     return (
       <div>
         <span>Clothing Types</span>
-        <span class="icon is-small">
+        <span className="icon is-small">
           <FontAwesomeIcon icon={faAngleDown} size="xs"/>
         </span>
       </div>);
   }
 
-  getClasses = (type) => {
+  getClassNames = (type) => {
     if (type in this.props.selectedClothingTypes) {
       return "dropdown-item is-active";
     }
@@ -149,17 +150,17 @@ class ClothingTypeDropdown extends React.Component {
   dropdownContent = () => {
     return (
       <div>
-        <div class="dropdown-content">
-          <a href="#" class={this.getClasses("Shirts")} onClick={()=>this.selectType("Shirts")}>
+        <div className="dropdown-content">
+          <a href="#" className={this.getClassNames("Shirt")} onClick={()=>this.selectType("Shirt")}>
             Shirts
           </a>
-          <a href="#" class={this.getClasses("Jackets")} onClick={()=>this.selectType("Jackets")}>
+          <a href="#" className={this.getClassNames("Jacket")} onClick={()=>this.selectType("Jacket")}>
             Jackets
           </a>
-          <a href="#" class={this.getClasses("Bottoms")} onClick={()=>this.selectType("Bottoms")}>
+          <a href="#" className={this.getClassNames("Bottom")} onClick={()=>this.selectType("Bottom")}>
             Bottoms
           </a>
-          <a href="#" class={this.getClasses("Shoes")} onClick={()=>this.selectType("Shoes")}>
+          <a href="#" className={this.getClassNames("Shoe")} onClick={()=>this.selectType("Shoe")}>
             Shoes
           </a>
         </div>
@@ -193,13 +194,13 @@ class StylesDropdown extends React.Component {
     return (
       <div>
         <span>Style</span>
-        <span class="icon is-small">
+        <span className="icon is-small">
           <FontAwesomeIcon icon={faAngleDown} size="xs"/>
         </span>
       </div>);
   }
 
-  getClasses = (type) => {
+  getclassNamees = (type) => {
     if (type in this.props.selectedStyles) {
       return "dropdown-item is-active";
     }
@@ -209,10 +210,10 @@ class StylesDropdown extends React.Component {
   dropdownContent = () => {
     return (
       <div>
-        <div class="dropdown-content">
+        <div className="dropdown-content">
           { 
             this.props.allStyles.map((style) => 
-              <a href="#" class={this.getClasses(style)} onClick={()=>this.selectStyle(style)}>
+              <a href="#" className={this.getclassNamees(style)} onClick={()=>this.selectStyle(style)}>
                 {style}
               </a>
             )
@@ -251,13 +252,13 @@ class WeatherDropdown extends React.Component {
     return (
       <div>
         <span>Weather</span>
-        <span class="icon is-small">
+        <span className="icon is-small">
           <FontAwesomeIcon icon={faAngleDown} size="xs"/>
         </span>
       </div>);
   }
 
-  getClasses = (type) => {
+  getclassNamees = (type) => {
     if (type in this.props.selectedWeatherRanges) {
       return "dropdown-item is-active";
     }
@@ -267,10 +268,10 @@ class WeatherDropdown extends React.Component {
   dropdownContent = () => {
     return (
       <div>
-        <div class="dropdown-content">
+        <div className="dropdown-content">
           { 
             this.getWeatherRanges().map((weatherRange) => 
-              <a href="#" class={this.getClasses(weatherRange)} onClick={()=>this.selectWeatherRanges(weatherRange)}>
+              <a href="#" className={this.getclassNamees(weatherRange)} onClick={()=>this.selectWeatherRanges(weatherRange)}>
                 {weatherRange}
               </a>
             )
@@ -323,8 +324,15 @@ class SearchBar extends React.Component {
     this.setState({value: inputElem.target.value});
   }
 
-  onSubmit = () => {
-    this.props.submit(this.state.value, this.state.searchType);
+  onSubmit = (value, type) => {
+    if (type === "title") {
+      this.props.selectTitleMatch(value);
+    } else if (type === "clothing") {
+      this.props.addClothingMatch(value);
+    } else if (type === "tag") {
+      this.props.addTag(value);
+    }
+
     this.setState({value: "", searchType: "", showDropdown: false});
   }
 
@@ -332,9 +340,9 @@ class SearchBar extends React.Component {
     var parent = this;
 
     if (event.key==="Enter") {
-      this.onSubmit();
+      this.onSubmit(this.state.value, "general");
     } else {
-      this.props.fetchAutofill()
+      this.props.fetchAutofill(this.state.value)
       .then(
         (data) => {
           this.setState({autofillGuesses: data, showDropdown: true});
@@ -344,24 +352,13 @@ class SearchBar extends React.Component {
   }
 
   getAutofillDropdown = () => {
-    var titleGuesses = [];
     var clothingGuesses = [];
     var tagGuesses = [];
 
-    if ("title" in this.state.autofillGuesses) {
-      titleGuesses = this.state.autofillGuesses["title"].map((autofillGuess) => 
-        <a class="dropdown-item" onClick={()=>{this.selectFromAutofill(autofillGuess, "Matches Title")}}>
-          <span class="tag" style={{"marginRight": "10px"}}>
-            Title Match
-          </span>
-        {autofillGuess}
-        </a>);
-    }
-
     if ("clothing" in this.state.autofillGuesses) {
       clothingGuesses = this.state.autofillGuesses["clothing"].map((autofillGuess) => 
-        <a class="dropdown-item" onClick={()=>{this.selectFromAutofill(autofillGuess, "Has Clothing")}}>
-          <span class="tag" style={{"marginRight": "10px"}}>
+        <a className="dropdown-item" onClick={()=>{this.onSubmit(autofillGuess, "clothing")}}>
+          <span className="tag" style={{"marginRight": "10px"}}>
             Contains
           </span>
         {autofillGuess}
@@ -371,22 +368,28 @@ class SearchBar extends React.Component {
 
     if ("tag" in this.state.autofillGuesses) {
       tagGuesses = this.state.autofillGuesses["tag"].map((autofillGuess) => 
-        <a class="dropdown-item" onClick={()=>{this.selectFromAutofill(autofillGuess, "Has Tag")}}>
-          <span class="tag" style={{"marginRight": "10px"}}>
+        <a className="dropdown-item" onClick={()=>{this.onSubmit(autofillGuess, "tag")}}>
+          <span className="tag" style={{"marginRight": "10px"}}>
             Tag
           </span>
         {autofillGuess}
-        </a>);
+        </a>
+      );
     }
 
     return (
       <div>
-        {titleGuesses}
-        { titleGuesses.length > 0 && (clothingGuesses.length > 0 || tagGuesses.length > 0) ?
-        <hr class="dropdown-divider"/> : ""}
+        <a className="dropdown-item" onClick={()=>{this.onSubmit(this.state.value, "title")}}>
+          <span className="tag" style={{"marginRight": "10px"}}>
+            Title Match
+          </span>
+        {this.state.value}
+        </a>
+        { clothingGuesses.length > 0 ?
+        <hr className="dropdown-divider"/> : ""}
         {clothingGuesses}
         { clothingGuesses.length > 0 && tagGuesses.length > 0 ?
-        <hr class="dropdown-divider"/> : ""}
+        <hr className="dropdown-divider"/> : ""}
         {tagGuesses}
       </div>
       )
@@ -396,29 +399,25 @@ class SearchBar extends React.Component {
     return Object.keys(this.state.autofillGuesses).length > 0;
   }
 
-  selectFromAutofill = (item, searchType) => {
-    this.setState({value: item, searchType: searchType}, ()=>{this.onSubmit();});
-  }
-
   render() {
     return (
       <div ref={this.box}>
-        <div class="dropdown is-active is-fullwidth" style={{"marginTop":"5px"}}>
-          <div class="dropdown-trigger">
-              <div class="field has-addons">
-                  <div class="control is-expanded">
-                      <input class="input" type="search" placeholder="Search by Name, Tag, or Piece of Clothing" value={this.state.value} onChange={this.updateInputValue} onKeyDown={this.onKeyDown}/>
+        <div className="dropdown is-active is-fullwidth" style={{"marginTop":"5px"}}>
+          <div className="dropdown-trigger">
+              <div className="field has-addons">
+                  <div className="control is-expanded">
+                      <input className="input" type="search" placeholder="Search by Name, Tag, or Piece of Clothing" value={this.state.value} onChange={this.updateInputValue} onKeyDown={this.onKeyDown}/>
                   </div>
-                  <div class="control">
-                    <a class="button is-info">
+                  <div className="control">
+                    <a className="button is-info">
                       Search
                     </a>
                   </div>
               </div>
           </div>
           { this.state.showDropdown && this.hasAutoFill() ?
-          <div class="dropdown-menu" id="dropdown-menu" role="menu">
-              <div class="dropdown-content">
+          <div className="dropdown-menu" id="dropdown-menu" role="menu">
+              <div className="dropdown-content">
                 {this.getAutofillDropdown()}
               </div>
           </div>
@@ -432,22 +431,22 @@ class SearchBar extends React.Component {
 class ResultBox extends React.Component {
   render() {
     return (
-      <div class="box" style={{"padding": "20px 20px 15px 20px"}}>
+      <div className="box" style={{"padding": "20px 20px 15px 20px"}}>
         {this.props.result.type === "outfit" ?
-          <a href={"outfit/"+this.props.result.id} class="result">
-            <span class="title is-6" style={{"paddingRight": "10px"}}>
+          <a href={"outfit/"+this.props.result.id} className="result">
+            <span className="title is-6" style={{"paddingRight": "10px"}}>
               {this.props.result.name}
             </span>
-            <span class="tag is-info" style={{"marginRight": "7px"}}>
+            <span className="tag is-info" style={{"marginRight": "7px"}}>
               Outfit
             </span>
             {this.props.result.styles.map((style, index) => 
-              <span class="tag is-primary is-light" style={{"marginRight": "7px"}}>
+              <span className="tag is-primary is-light" style={{"marginRight": "7px"}}>
                 {style}
               </span>
             )}
             {this.props.result.other_tags.map((tag, index) => 
-              <span class="tag" style={{"marginRight": "7px"}}>
+              <span className="tag" style={{"marginRight": "7px"}}>
                 {tag}
               </span>
             )}
@@ -462,7 +461,7 @@ class ResultBox extends React.Component {
               </span>
             </div>
             <div style={{"paddingTop": "10px"}}>
-              <span class="tag is-info is-light"> 
+              <span className="tag is-info is-light"> 
                 <span style={{"paddingRight": "5px"}}>{this.props.result.weather_rating}</span> 
                 <FontAwesomeIcon icon={faCloud} size="xs"/>
               </span>
@@ -470,19 +469,19 @@ class ResultBox extends React.Component {
           </a>
         : 
           <div>
-            <span class="title is-6" style={{"paddingRight": "10px"}}>
+            <span className="title is-6" style={{"paddingRight": "10px"}}>
               {this.props.result.name}
             </span>
-            <span class="tag is-warning" style={{"marginRight": "7px"}}>
+            <span className="tag is-warning" style={{"marginRight": "7px"}}>
               Clothing
             </span>
             {this.props.result.styles.map((style, index) => 
-              <span class="tag is-primary is-light" style={{"marginRight": "7px"}}>
+              <span className="tag is-primary is-light" style={{"marginRight": "7px"}}>
                 {style}
               </span>
             )}
             {this.props.result.other_tags.map((tag, index) => 
-              <span class="tag" style={{"marginRight": "7px"}}>
+              <span className="tag" style={{"marginRight": "7px"}}>
                 {tag}
               </span>
             )}
@@ -504,27 +503,11 @@ class OmniSearch extends React.Component {
         clothingTypes: {},
         styles: {},
         weatherRatings: {},
-        searchQueries: [],
-        tags: []
+        titleMatch: "",
+        tags: {},
+        containsClothing: {},
       },
-      results: [
-        {
-          type: "outfit",
-          id: "619f517d7105e3db8b626617",
-          name: "Outfit #4",
-          clothes: ["Grey Reigning Champ Hoodie", "Black \"Beat LA\" Shirt", "Black Uniqlo Jeans", "Triple White Jordan 1 Mid's"],
-          styles: ["casual"],
-          other_tags: ["game day", "giants"],
-          weather_rating: "57-63"
-        },
-        {
-          type: "clothing",
-          id: "619f517d7105e3db8b626617",
-          name: "Black Nike Hoodie",
-          styles: ["casual"],
-          other_tags: ["game day", "giants"],
-        }
-      ]
+      results: []
     }
 
     getStyles()
@@ -535,156 +518,199 @@ class OmniSearch extends React.Component {
       ,(error)=>console.log(error));
   }
 
-  deleteTag = (index) => {
-    var tags = this.state.searchParams.tags;
-    tags.splice(index, 1);
-    this.setState({searchParams: {...this.state.searchParams, tags: tags}});
-  }
-
-  addTag = (tag) => {
-    this.setState({searchParams: {...this.state.searchParams, tags: [...this.state.searchParams.tags, tag]}})
-  }
-
   isTypeSelected = (type) => {
     return this.state.searchParams.type === type;
   }
 
+  setStateAndSearch(newState) {
+    this.setState(newState, this.executeSearch);
+  }
+
   toggleType = (type) => {
-    if (type != "clothes") {
-      this.setState({searchParams: {...this.state.searchParams, type: type, clothingTypes: []}});
+    if (type != "Clothes") {
+      this.setStateAndSearch({searchParams: {...this.state.searchParams, type: type, clothingTypes: []}});
     } else {
-      this.setState({searchParams: {...this.state.searchParams, type: type}});
+      this.setStateAndSearch({searchParams: {...this.state.searchParams, type: type, weatherRatings: [], containsClothing: []}});
     }
   }
 
+  selectTitleMatch = (titleMatchQuery) => {
+    this.setStateAndSearch({searchParams: {...this.state.searchParams, titleMatch: titleMatchQuery}});
+  }
+
+  deleteTitleMatch = () => {
+    this.setStateAndSearch({searchParams: {...this.state.searchParams, titleMatch: ""}});
+  }
+
+  addTag = (tag) => {
+    var tags = this.state.searchParams.tags;
+    tags[tag] = "";
+
+    this.setStateAndSearch({searchParams: {...this.state.searchParams, tags: tags}});
+  }
+
+  deleteTag = (tag) => {
+    var tags = this.state.searchParams.tags;
+    delete tags[tag];
+    this.setStateAndSearch({searchParams: {...this.state.searchParams, tags: tags}});
+  }
+
+  addClothingMatch = (clothing) => {
+    var containsClothing = this.state.searchParams.containsClothing;
+    containsClothing[clothing] = "";
+
+    this.setStateAndSearch({searchParams: {...this.state.searchParams, containsClothing: containsClothing}});
+  }
+
+  deleteClothingMatch = (clothing) => {
+    var containsClothing = this.state.searchParams.containsClothing;
+    delete containsClothing[clothing];
+    this.setStateAndSearch({searchParams: {...this.state.searchParams, containsClothing: containsClothing}});
+  }
+
   selectClothingTypes = (clothingTypes) => {
-    this.setState({searchParams: {...this.state.searchParams, clothingTypes: clothingTypes}})
+    this.setStateAndSearch({searchParams: {...this.state.searchParams, clothingTypes: clothingTypes}});
   }
 
   deleteClothingType = (clothingType) => {
     var clothingTypes = this.state.searchParams.clothingTypes;
     delete clothingTypes[clothingType];
-    this.setState({searchParams: {...this.state.searchParams, clothingTypes: clothingTypes}});
+    this.setStateAndSearch({searchParams: {...this.state.searchParams, clothingTypes: clothingTypes}});
   }
 
   selectStyles = (styles) => {
-    this.setState({searchParams: {...this.state.searchParams, styles: styles}});
+    this.setStateAndSearch({searchParams: {...this.state.searchParams, styles: styles}});
   }
 
   deleteStyle = (style) => {
     var styles = this.state.searchParams.styles;
     delete styles[style];
-    this.setState({searchParams: {...this.state.searchParams, styles: styles}});
+    this.setStateAndSearch({searchParams: {...this.state.searchParams, styles: styles}});
   }
 
   selectWeatherRanges = (weatherRatings) => {
-    this.setState({searchParams: {...this.state.searchParams, weatherRatings: weatherRatings}})
-  }
-
-  addTag = (tag) => {
-    console.log(tag);
-    this.setState({searchParams: {...this.state.searchParams, tags: [...this.state.searchParams.tags, tag]}})
+    this.setStateAndSearch({searchParams: {...this.state.searchParams, weatherRatings: weatherRatings}});
   }
 
   deleteWeatherRating = (weatherRating) => {
     var weatherRatings = this.state.searchParams.weatherRatings;
     delete weatherRatings[weatherRating];
-    this.setState({searchParams: {...this.state.searchParams, weatherRatings: weatherRatings}});
-  }
-
-  selectSearch = (searchItem, searchType) => {
-    this.setState({searchParams: {...this.state.searchParams, searchQueries: [...this.state.searchParams.searchQueries, {value: searchItem, searchType: searchType}]}});
+    this.setStateAndSearch({searchParams: {...this.state.searchParams, weatherRatings: weatherRatings}});
   }
 
   deleteSearchQuery = (index) => {
     var searchQueries = this.state.searchParams.searchQueries;
     searchQueries.splice(index, 1);
-    this.setState({searchParams: {...this.state.searchParams, searchQueries: searchQueries}});
+    this.setStateAndSearch({searchParams: {...this.state.searchParams, searchQueries: searchQueries}});
+  }
+
+  executeSearch = () => {
+    console.log(this.state.searchParams);
+    search(this.state.searchParams)
+      .then(
+        (response) => {
+          this.setState({results: response});
+        },
+        (error) => {
+          alert(error.message);
+    });
   }
 
   render() {
   return (
     <div style={{"paddingTop": "15px"}}>
       <div>
-        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <nav className="breadcrumb" aria-label="breadcrumbs">
           <ul>
             <li><a href="/">Home</a></li>
-            <li class="is-active"><a aria-current="page">Search</a></li>
+            <li className="is-active"><a aria-current="page">Search</a></li>
           </ul>
         </nav>
       </div>
-      <div class="columns is-multiline is-vcentered"  style={{"paddingTop": "15px"}}>
-        <div class="column is-12" style={{"paddingBottom": "2px"}}>
+      <div className="columns is-multiline is-vcentered"  style={{"paddingTop": "15px"}}>
+        <div className="column is-12" style={{"paddingBottom": "2px"}}>
           <ItemTypeDropdown selectedType={this.state.searchParams.type} updateInputValue={this.toggleType}/>
+          <StylesDropdown allStyles={this.state.allStyles} updateInputValue={this.selectStyles} selectedStyles={this.state.searchParams.styles}/>
           { this.state.searchParams.type === "Clothes" ? 
               <ClothingTypeDropdown updateInputValue={this.selectClothingTypes} selectedClothingTypes={this.state.searchParams.clothingTypes}/>
               : ""
           }
-          <StylesDropdown allStyles={this.state.allStyles} updateInputValue={this.selectStyles} selectedStyles={this.state.searchParams.styles}/>
-          <WeatherDropdown updateInputValue={this.selectWeatherRanges} selectedWeatherRanges={this.state.searchParams.weatherRatings}/>
+          { this.state.searchParams.type === "Outfits" ? 
+              <WeatherDropdown updateInputValue={this.selectWeatherRanges} selectedWeatherRanges={this.state.searchParams.weatherRatings}/>
+              : ""
+          }
         </div>
-        <div class="column is-5" style={{"paddingTop": "2px"}}>
-          <SearchBar submit={this.selectSearch} fetchAutofill={()=>{return Promise.resolve({"title": ["yabadabadoo"], "clothing": ["Padagonia"], "tag": ["yesh"]})}}/>
+        <div className="column is-5" style={{"paddingTop": "2px"}}>
+          <SearchBar addTag={this.addTag} addClothingMatch={this.addClothingMatch} selectTitleMatch={this.selectTitleMatch} fetchAutofill={getSearchPredictions}/>
         </div>
-        <div class="column is-7"  style={{"paddingTop":"0px","paddingBottom":"0px"}}></div>
-        <div class="column is-5" style={{"paddingTop":"0px", "paddingBottom": "0px"}}>
-          <div class="tags">
-            {this.state.searchParams.searchQueries.map((query, index) => 
-              // <div style={{"paddingBottom": "4px"}}>
-                <span class="tag">
-                  {query["searchType"]}: {query["value"]}
-                <RemoveItem deleteItem={()=>{this.deleteSearchQuery(index)}}/>
-                </span>
-              // </div>
-            )}
+        <div className="column is-7"  style={{"paddingTop":"0px","paddingBottom":"0px"}}></div>
+        <div className="column is-5" style={{"paddingTop":"0px", "paddingBottom": "0px"}}>
+          <div className="tags">
             { this.state.searchParams.type != "" ? 
                 // <div style={{"paddingBottom": "4px"}}>
-                  <span class="tag">
+                  <span className="tag">
                     Type: {this.state.searchParams.type}
                   <RemoveItem deleteItem={()=>{this.toggleType("")}}/>
                   </span>
                 // </div>
                 : ""
             }
+            { this.state.searchParams.titleMatch != "" ? 
+                // <div style={{"paddingBottom": "4px"}}>
+                  <span className="tag">
+                    Matches Title: {this.state.searchParams.titleMatch}
+                  <RemoveItem deleteItem={()=>{this.deleteTitleMatch()}}/>
+                  </span>
+                // </div>
+                : ""
+            }
             {Object.keys(this.state.searchParams.clothingTypes).map((clothingType, index) => 
               // <div style={{"paddingBottom": "4px"}}>
-                <span class="tag">
+                <span className="tag">
                   Clothing Type: {clothingType}
                 <RemoveItem deleteItem={()=>{this.deleteClothingType(clothingType)}}/>
                 </span>
               // </div>
             )}
-            {Object.keys(this.state.searchParams.styles).map((style, index) => 
+            {Object.keys(this.state.searchParams.styles).map((style) => 
               // <div style={{"paddingBottom": "4px"}}>
-                <span class="tag">
+                <span className="tag">
                   Style: {style}
                 <RemoveItem deleteItem={()=>{this.deleteStyle(style)}}/>
                 </span>
               // </div>
             )}
-            {Object.keys(this.state.searchParams.weatherRatings).map((weatherRating, index) => 
+            {Object.keys(this.state.searchParams.containsClothing).map((clothing) => 
               // <div style={{"paddingBottom": "4px"}}>
-                <span class="tag">
+                <span className="tag">
+                  Has Clothing: {clothing}
+                <RemoveItem deleteItem={()=>{this.deleteClothingMatch(clothing)}}/>
+                </span>
+              // </div>
+            )}
+            {Object.keys(this.state.searchParams.tags).map((tag) => 
+              // <div style={{"paddingBottom": "4px"}}>
+                <span className="tag">
+                    Has Tag: {tag}
+                  <RemoveItem deleteItem={()=>{this.deleteTag(tag)}}/>
+                </span>
+              // </div>
+            )}
+            {Object.keys(this.state.searchParams.weatherRatings).map((weatherRating) => 
+              // <div style={{"paddingBottom": "4px"}}>
+                <span className="tag">
                   Weather Range: {weatherRating}
                 <RemoveItem deleteItem={()=>{this.deleteWeatherRating(weatherRating)}}/>
                 </span>
               // </div>
             )}
-            {this.state.searchParams.tags.map((tag, index) => 
-              // <div style={{"paddingBottom": "4px"}}>
-                <span class="tag">
-                  Tag: {tag}
-                <RemoveItem deleteItem={()=>{}}/>
-                </span>
-              // </div>
-            )}
           </div>
         </div>
-        <div class="column is-7"  style={{"paddingTop":"0px","paddingBottom":"0px"}}></div>
-        <div class="column is-5" style={{"paddingTop":"0px"}}>
-          <hr class="dropdown-divider"/>
+        <div className="column is-7"  style={{"paddingTop":"0px","paddingBottom":"0px"}}></div>
+        <div className="column is-5" style={{"paddingTop":"0px"}}>
+          <hr className="dropdown-divider"/>
           { this.state.results.length == 0 ? 
-              <div class="has-text-centered" style={{"fontStyle": "italic", "marginTop":"15px"}}>
+              <div className="has-text-centered" style={{"fontStyle": "italic", "marginTop":"15px"}}>
                 No Results
               </div>
             :
