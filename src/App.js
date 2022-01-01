@@ -20,6 +20,10 @@ import Home from './Home.jsx';
 import GetOutfit from './GetOutfit.jsx';
 import CreateOutfit from './CreateOutfit.jsx';
 import EditOutfit from './EditOutfit.jsx';
+import CreateClothing from './CreateClothing.jsx';
+import EditClothing from './EditClothing.jsx';
+import RefineClothing from './RefineClothing.jsx';
+import GetClothing from './GetClothing.jsx';
 import OmniSearch from './OmniSearch.jsx';
 
 function Header() {
@@ -44,6 +48,11 @@ function App() {
           <Route path="/outfit/:id/edit" element={<EditOutfit/>}/>
           <Route path="/outfit/:id" element={<GetOutfit/>}/>
           <Route path="/outfit/create"  element={<CreateOutfit />}/>
+          <Route path="/clothing/" element={<GetClothing/>}/>
+          <Route path="/clothing/refine" element={<RefineClothing/>}/>
+          <Route path="/clothing/:id/edit" element={<EditClothing/>}/>
+          <Route path="/clothing/create"  element={<CreateClothing />}/>
+          <Route path="/clothing/:id" element={<GetClothing/>}/>
           <Route path="/search"  element={<OmniSearch/>}/>
         </Routes>
       </div>

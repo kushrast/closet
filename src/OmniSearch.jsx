@@ -36,7 +36,7 @@ class MenuDropdownElement extends React.Component {
    */
   handleClickOutside(event) {
     if (this.box && !this.box.current.contains(event.target)) {
-      this.setState({showInput: false, showDropdown: false, shouldFetchAutofill: true});
+      this.setState({showDropdown: false});
     }
   }
 
@@ -87,7 +87,7 @@ class ItemTypeDropdown extends React.Component {
       </div>);
   }
 
-  getclassNamees = (type) => {
+  getClassNames = (type) => {
     if (this.props.selectedType === type) {
       return "dropdown-item is-active";
     }
@@ -98,10 +98,10 @@ class ItemTypeDropdown extends React.Component {
     return (
       <div>
         <div className="dropdown-content">
-          <a href="#" className={this.getclassNamees("Outfits")} onClick={()=>this.selectType("Outfits")}>
+          <a href="#" className={this.getClassNames("Outfits")} onClick={()=>this.selectType("Outfits")}>
             Outfits
           </a>
-          <a className={this.getclassNamees("Clothes")} onClick={()=>this.selectType("Clothes")}>
+          <a className={this.getClassNames("Clothes")} onClick={()=>this.selectType("Clothes")}>
             Clothes
           </a>
         </div>
@@ -468,7 +468,7 @@ class ResultBox extends React.Component {
             </div>
           </a>
         : 
-          <div>
+          <a href={"clothing/"+this.props.result.id} className="result">
             <span className="title is-6" style={{"paddingRight": "10px"}}>
               {this.props.result.name}
             </span>
@@ -485,7 +485,7 @@ class ResultBox extends React.Component {
                 {tag}
               </span>
             )}
-          </div>
+          </a>
         }
         </div>
     );

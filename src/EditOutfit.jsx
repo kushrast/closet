@@ -43,6 +43,10 @@ class EditOutfit extends React.Component {
     this.setState({outfit: {...this.state.outfit, name: inputElem.target.value}});
   }
 
+  updateNotes = (inputElem) => {
+    this.setState({outfit: {...this.state.outfit, notes: inputElem.target.value}});
+  }
+
   addNewJacket = (jacket) => {
     this.setState({outfit: {...this.state.outfit, jackets: [...this.state.outfit.jackets, jacket]}})
   }
@@ -84,7 +88,7 @@ class EditOutfit extends React.Component {
   }
 
   addStyleTag = (style) => {
-    this.setState({outfit: {...this.state.outfit, styles: [...this.state.outfit.styles, style]}})
+    this.setState({outfit: {...this.state.outfit, styles: [...this.state.outfit.styles, style.toLowerCase()]}})
   }
 
   deleteStyleTag = (index) => {
@@ -94,7 +98,7 @@ class EditOutfit extends React.Component {
   }
 
   addOtherTag = (tag) => {
-    this.setState({outfit: {...this.state.outfit, other_tags: [...this.state.outfit.other_tags, tag]}})
+    this.setState({outfit: {...this.state.outfit, other_tags: [...this.state.outfit.other_tags, tag.toLowerCase()]}})
   }
 
   deleteOtherTag = (index) => {
@@ -338,7 +342,7 @@ class EditOutfit extends React.Component {
                 <div>
                   {this.state.outfit.styles.map((style, index) => 
                     <div style={{"display":"flex"}}>
-                      <span class="tag">
+                      <span class="tag" style={{"marginTop":"5px"}}>
                         {style}
                       <RemoveItem deleteItem={()=>{this.deleteStyleTag(index)}}/>
                       </span>
@@ -354,7 +358,7 @@ class EditOutfit extends React.Component {
                 <div>
                   {this.state.outfit.other_tags.map((tag, index) => 
                     <div style={{"display":"flex"}}>
-                      <span class="tag">
+                      <span class="tag" style={{"marginTop":"5px"}}>
                         {tag}
                       <RemoveItem deleteItem={()=>{this.deleteOtherTag(index)}}/>
                       </span>
@@ -366,7 +370,7 @@ class EditOutfit extends React.Component {
               <div style={{paddingTop: "20px"}}>
                 <span class="title is-5"> Notes: </span>
                 <div>
-                  <textarea class="textarea" placeholder="Extra Notes" rows="4"></textarea>
+                  <textarea class="textarea" placeholder="Extra Notes" rows="4" onChange={this.updateNotes}></textarea>
                 </div>
               </div>
               <div style={{paddingTop: "20px"}} onClick={this.verifyOutfit}>

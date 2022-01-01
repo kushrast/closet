@@ -25,22 +25,22 @@ function Home() {
     <div style={{"paddingTop": "50px"}}>
       <div class="columns">
         <div class="column is-3  is-centered">
-          <a href="/outfit/create"><button class="button is-light is-success is-fullwidth">Add outfit</button></a>
-        </div>
-      </div>
-      <div class="columns">
-        <div class="column is-3  is-centered">
-          <button class="button is-light is-success  is-fullwidth">Add Clothing</button>
-        </div>
-      </div>
-      <div class="columns">
-        <div class="column is-3  is-centered">
           <a href="/search"><button class="button is-light is-success  is-fullwidth">Search</button></a>
         </div>
       </div>
       <div class="columns">
         <div class="column is-3  is-centered">
-          <button class="button is-light is-success  is-fullwidth">Refine</button>
+          <a href="/outfit/create"><button class="button is-light is-success is-fullwidth">Add outfit</button></a>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column is-3  is-centered">
+          <a href="/clothing/create"><button class="button is-light is-success is-fullwidth">Add clothing</button></a>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column is-3  is-centered">
+          <a href="/clothing/refine"><button class="button is-light is-success is-fullwidth">Refine</button></a>
         </div>
       </div>
     </div>

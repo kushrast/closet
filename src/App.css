@@ -17,6 +17,17 @@
   font-weight: 500;
 } 
 
+.small-input {
+  padding: 0px 0px 0px 0px;
+  box-shadow: none !important;
+  border: 0 !important;
+  border-radius: 0px !important;
+  border-bottom: 1px solid lightgrey !important;
+  outline: 0 !important;
+  font-size: 1rem !important;
+  font-weight: 400;
+} 
+
 .dropdown.is-fullwidth {
   display: flex;
 }
