@@ -70,7 +70,7 @@ class ApiHubStorageClient extends StorageClient {
 	createNewOutfit = (outfit) => {
 		outfit = JSON.parse(JSON.stringify(outfit));
 		outfit["styles"] = outfit["styles"].map((value) => value.toLowerCase());
-		outfit["other_tags"] = outfit["styles"].map((value) => value.toLowerCase());
+		outfit["other_tags"] = outfit["other_tags"].map((value) => value.toLowerCase());
 
 		var json_outfit = JSON.stringify(outfit);
 		json_outfit = encodeURIComponent(json_outfit);
@@ -91,7 +91,7 @@ class ApiHubStorageClient extends StorageClient {
 	updateOutfit = (outfit) => {
 		outfit = JSON.parse(JSON.stringify(outfit));
 		outfit["styles"] = outfit["styles"].map((value) => value.toLowerCase());
-		outfit["other_tags"] = outfit["styles"].map((value) => value.toLowerCase());
+		outfit["other_tags"] = outfit["other_tags"].map((value) => value.toLowerCase());
 
 		var json_outfit = JSON.stringify(outfit);
 		json_outfit = encodeURIComponent(json_outfit);

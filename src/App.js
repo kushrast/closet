@@ -44,11 +44,9 @@ function App() {
         <Header/>
         <Routes>
           <Route path="/" element={<Home/>}/>
-          <Route path="/outfit/" element={<GetOutfit/>}/>
           <Route path="/outfit/:id/edit" element={<EditOutfit/>}/>
           <Route path="/outfit/:id" element={<GetOutfit/>}/>
           <Route path="/outfit/create"  element={<CreateOutfit />}/>
-          <Route path="/clothing/" element={<GetClothing/>}/>
           <Route path="/clothing/refine" element={<RefineClothing/>}/>
           <Route path="/clothing/:id/edit" element={<EditClothing/>}/>
           <Route path="/clothing/create"  element={<CreateClothing />}/>

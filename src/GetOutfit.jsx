@@ -17,9 +17,6 @@ class GetOutfit extends React.Component {
       loading: true
     }
     var id = this.props.params.id;
-    if (id == null) {
-      id = "619f517d7105e3db8b626617";
-    }
 
     getOutfit(id)
     .then(
@@ -115,7 +112,7 @@ class GetOutfit extends React.Component {
             <span class="title is-5"> Notes: </span>
             <div>
               <span class="subtitle is-6">
-                {this.state.notes}
+                {this.state.notes === "" ? <span style={{"fontStyle":"italic"}}> No notes </span> : this.state.notes }
               </span>
             </div>
           </div>

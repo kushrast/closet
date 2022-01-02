@@ -17,9 +17,6 @@ class GetClothing extends React.Component {
       loading: true
     }
     var id = this.props.params.id;
-    if (id == null) {
-      id = "61d01e0dbc525d2210aae8b4";
-    }
 
     getClothing(id)
     .then(
@@ -61,7 +58,7 @@ class GetClothing extends React.Component {
               <span class="title is-5"> Color </span>
               <div>
                 <span class="subtitle is-6">
-                  {this.state.color}
+                {this.state.color === "" ? <span style={{"fontStyle":"italic"}}> No color provided </span> : this.state.color }
                 </span>
               </div>
             </div>
@@ -71,7 +68,7 @@ class GetClothing extends React.Component {
               <span class="title is-5"> TTL </span>
               <div>
                 <span class="subtitle is-6">
-                  {this.state.TTL}
+                {this.state.TTL === "" ? <span style={{"fontStyle":"italic"}}> No TTL provided </span> : this.state.TTL }
                 </span>
               </div>
             </div>
@@ -84,7 +81,7 @@ class GetClothing extends React.Component {
                 { this.state.url != "" ?
                     <a href={this.state.url}>{this.state.url}</a>
                   :
-                    <span> No URL provided </span>
+                    <span style={{"fontStyle":"italic"}}> No URL provided </span> 
                 }
                 </span>
               </div>
@@ -94,7 +91,7 @@ class GetClothing extends React.Component {
             <span class="title is-5"> Notes: </span>
             <div>
               <span class="subtitle is-6">
-                {this.state.notes}
+                {this.state.notes === "" ? <span style={{"fontStyle":"italic"}}> No notes </span> : this.state.notes }
               </span>
             </div>
           </div>

@@ -118,11 +118,13 @@ class RefineClothing extends React.Component {
     this.state = {
       loading: true,
       reason: "",
-      sendToClothingPage: false,
-
       clothing: {},
     }
 
+    this.fetchNewClothing();
+  }
+
+  fetchNewClothing = () => {
     refineClothing()
     .then(
       (data) => {
@@ -219,13 +221,12 @@ class RefineClothing extends React.Component {
         updateClothing(this.state.clothing)
           .then(
             (data) => {
-              this.setState({sendToClothingPage: true});
+              this.fetchNewClothing();
             },
             (error)=>console.log(error));
       },
       (error) => {
         alert(error.message);
-        this.setState({showSubmitModal: false});
     });
   }
 
@@ -238,7 +239,6 @@ class RefineClothing extends React.Component {
         </nav>
         :
         <div>
-          {this.state.sendToClothingPage ? <Navigate to={"/clothing/"+this.state.clothing.id} replace={true} /> : ""}
           <div>
             <nav class="breadcrumb" aria-label="breadcrumbs">
               <ul>

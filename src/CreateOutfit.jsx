@@ -159,20 +159,6 @@ class CreateOutfit extends React.Component {
 
     validatePotentialOutfit(this.state.outfit)
     .then(
-      (response) => {
-        if (response.newClothes.length > 0) {
-          this.setState({newClothes: response.newClothes, showSubmitModal: true});
-        } else {
-          this.submitOutfit();
-        }
-      },
-      (error) => {
-        alert(error.message);
-        this.setState({showSubmitModal: false});
-    });
-
-    validatePotentialOutfit(this.state.outfit)
-    .then(
       (newClothes) => {
         if (newClothes.length > 0) {
           this.setState({newClothes: newClothes, showSubmitModal: true});

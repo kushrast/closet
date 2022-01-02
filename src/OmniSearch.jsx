@@ -388,7 +388,7 @@ class SearchBar extends React.Component {
         { clothingGuesses.length > 0 ?
         <hr className="dropdown-divider"/> : ""}
         {clothingGuesses}
-        { clothingGuesses.length > 0 && tagGuesses.length > 0 ?
+        { tagGuesses.length > 0 ?
         <hr className="dropdown-divider"/> : ""}
         {tagGuesses}
       </div>
@@ -475,6 +475,9 @@ class ResultBox extends React.Component {
             <span className="tag is-warning" style={{"marginRight": "7px"}}>
               Clothing
             </span>
+            <span className="tag is-info" style={{"marginRight": "7px"}}>
+              {this.props.result.clothing_type}
+            </span>
             {this.props.result.styles.map((style, index) => 
               <span className="tag is-primary is-light" style={{"marginRight": "7px"}}>
                 {style}
@@ -516,6 +519,8 @@ class OmniSearch extends React.Component {
         this.setState({...data, allStyles: data});
       }
       ,(error)=>console.log(error));
+
+    this.executeSearch();
   }
 
   isTypeSelected = (type) => {
@@ -605,7 +610,6 @@ class OmniSearch extends React.Component {
   }
 
   executeSearch = () => {
-    console.log(this.state.searchParams);
     search(this.state.searchParams)
       .then(
         (response) => {
